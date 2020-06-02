@@ -136,4 +136,63 @@
 
     return node;
   }
+
+  // Solidarity with Black Lives Matter
+  function addSolidarityMessage() {
+    if (location.hostname === "html.spec.whatwg.org" ||
+        location.hostname === "localhost") {
+
+      // Skip snapshots that already have an "annoying-warning"
+      if (document.querySelector('.annoying-warning')) {
+        return;
+      }
+
+      const header = document.querySelector('.head');
+      const details = document.createElement('details');
+
+      // Stay collapsed when navigating in multipage
+      let shouldOpen = true;
+      if ('sessionStorage' in window && sessionStorage.getItem('blm-open') === 'false') {
+        shouldOpen = false;
+      }
+      details.open = shouldOpen;
+
+      details.innerHTML = `
+      <summary>George Floyd</summary>
+      <p>Natosha McDade, Yassin Mohamed, Finan H. Berhe, Sean Reed, Steven Demarco Taylor, Breonna Taylor, Ariane McCree, Terrance Franklin, Miles Hall, Darius Tarver, William Green, Samuel David Mallard, Kwame Jones, De’von Bailey, Christopher Whitfield, Anthony Hill, De’Von Bailey, Eric Logan, Jamarion Robinson, Gregory Hill Jr, JaQuavion Slaton, Ryan Twyman, Brandon Webber, Jimmy Atchison, Willie McCoy, Emantic Fitzgerald Bradford J, D’ettrick Griffin, Jemel Roberson, DeAndre Ballard, Botham Shem Jean, Robert Lawrence White, Anthony Lamar Smith, Ramarley Graham, Manuel Loggins Jr, Trayvon Martin, Wendell Allen, Kendrec McDade, Larry Jackson Jr, Jonathan Ferrell, Jordan Baker, Victor White III, Dontre Hamilton, Eric Garner, John Crawford III, Michael Brown, Ezell Ford, Dante Parker, Kajieme Powell, Laquan McDonald, Akai Gurley, Tamir Rice, Rumain Brisbon, Jerame Reid, Charly Keunang, Tony Robinson, Walter Scott, Freddie Gray, Brendon Glenn, Samuel DuBose, Christian Taylor, Jamar Clark, Mario Woods, Quintonio LeGrier, Gregory Gunn, Akiel Denkins, Alton Sterling, Philando Castile, Terrence Sterling, Terence Crutcher, Keith Lamont Scott, Alfred Olango, Jordan Edwards, Stephon Clark, Danny Ray Thomas, DeJuan Guillory, Patrick Harmon, Jonathan Hart, Maurice Granton, Julius Johnson, Jamee Johnson, Michael Dean, and too many more to list here...</p>
+      <p>The maintainers of this Standard stand in solidarity with Black Lives Matter.</p>
+      <p>Please consider donating to <a href="https://blacklivesmatter.com/">Black Lives Matter</a>, <a href="https://www.naacpldf.org/">The NAACP Legal Defense and Educational Fund</a>, <a href="https://eji.org/">The Equal Justice Initiativea</a>, <a href="https://www.wetheprotesters.org/">We The Protesters</a>, and <a href="https://www.gofundme.com/f/georgefloyd">George Floyd Memorial Fund</a>.</p>
+      `;
+
+      details.className = 'annoying-warning blm';
+
+      details.ontoggle = function() {
+        if ('sessionStorage' in window) {
+          sessionStorage.setItem('blm-open', String(details.open));
+        }
+      }
+
+      const style = document.createElement('style');
+      style.textContent = `
+      .annoying-warning.blm {
+        background: black;
+      }
+      .annoying-warning.blm:not([open]) {
+        top: 0;
+        bottom: auto;
+      }
+      html {
+        scroll-padding: 40px 0 0 0;
+      }`;
+
+      document.head.appendChild(style);
+      header.parentNode.insertBefore(details, header.nextSibling);
+    }
+  }
+  if (document.readyState === 'interactive') {
+    addSolidarityMessage();
+  } else {
+    addEventListener('DOMContentLoaded', addSolidarityMessage, false);
+  }
+
 }());
